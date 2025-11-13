@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath('..'))  # so Sphinx can import amberNPS
 project = 'amberNPS'
 copyright = '2025, Daniel Pasin'
 author = 'Daniel Pasin'
-release = '0.1.4'
+release = '0.1.6'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

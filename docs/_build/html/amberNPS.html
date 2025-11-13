@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="prev" title="amberNPS documentation" href="index.html">
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
-        <title>amberNPS package - amberNPS 0.1.4 documentation</title>
+        <title>amberNPS package - amberNPS 0.1.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -161,7 +161,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">amberNPS 0.1.4 documentation</div></a>
+      <a href="index.html"><div class="brand">amberNPS 0.1.6 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -182,7 +182,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
-  <span class="sidebar-brand-text">amberNPS 0.1.4 documentation</span>
+  <span class="sidebar-brand-text">amberNPS 0.1.6 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -236,7 +236,7 @@
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-amberNPS" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="amberNPS.amberNPS">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">amberNPS.</span></span><span class="sig-name descname"><span class="pre">amberNPS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mlp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./amberNPS/models/multitask_regressor.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./amberNPS//models/scaler.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./amberNPS/models/random_forest_model.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">le</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'./amberNPS//models/label_encoder.pkl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/amberNPS/api.html#amberNPS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#amberNPS.amberNPS" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">amberNPS.</span></span><span class="sig-name descname"><span class="pre">amberNPS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mlp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'multitask_regressor.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'scaler.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'random_forest_model.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">le</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'label_encoder.pkl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/amberNPS/api.html#amberNPS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#amberNPS.amberNPS" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Predicts drug class and lethal blood concentration (LBC) values from SMILES strings.</p>
 <p>The AmberNPS API provides drug classification and prediction of LBC values
@@ -474,7 +474,7 @@ ng/mL) for the provided smiles and sets them as instance properties.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=fd825880"></script>
+</div><script src="_static/documentation_options.js?v=6e0256f3"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
