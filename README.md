@@ -37,9 +37,9 @@ Results are also stored as properties:
 >>> a.HOLBC
 870.7153200659999
 >>> a.drug_class
-Benzodiazepines
+'Benzodiazepines'
 >>> a.smiles
-Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4
+'Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4'
 ```
 The raw predictions (log10 of concentrations above) can also be accessed.
 
