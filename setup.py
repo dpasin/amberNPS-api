@@ -9,7 +9,7 @@ setup(
     packages = ['amberNPS'],
     include_package_data=True,
     package_data= {'amberNPS': ['*.pkl', '*.png']},
-    version = '0.1.4',
+    version = '0.1.5',
     license='MIT',
     description = 'A python api to make lethal blood concentrations using amberNPS',
     long_description=long_description,
