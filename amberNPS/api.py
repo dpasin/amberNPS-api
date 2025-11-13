@@ -1,10 +1,8 @@
 import pickle
 from pathlib import Path
-from typing import Self
-
+import importlib.resources as resources
 import numpy as np
 import pandas as pd
-from IPython.display import display
 from PIL import Image
 from mordred import (Calculator, AdjacencyMatrix, Autocorrelation, EState, DistanceMatrix,
                      TopologicalIndex, BCUT, MoeType, RingCount, BaryszMatrix, ExtendedTopochemicalAtom,
@@ -14,7 +12,6 @@ from rdkit.Chem import Draw, MACCSkeys, rdMolDescriptors
 
 
 class amberNPS:
-    
     """
     Predicts drug class and lethal blood concentration (LBC) values from SMILES strings.
 
@@ -62,12 +59,12 @@ class amberNPS:
     convert_pLBC_to_LBC(pLBC, mw)
         Converts predicted -log(LBC) values to actual concentrations.
     """
-    
+
     def __init__(self,
-                 mlp: str = 'models/multitask_regressor.pkl',
-                 scaler: str = 'models/scaler.pkl',
-                 rf: str = 'models/random_forest_model.pkl',
-                 le: str = 'models/label_encoder.pkl'
+                 mlp: str = "multitask_regressor.pkl",
+                 scaler: str = "scaler.pkl",
+                 rf: str = "random_forest_model.pkl",
+                 le: str = "label_encoder.pkl"
                  ):
 
         self.mlp = self._load_pickle(mlp)
@@ -79,6 +76,9 @@ class amberNPS:
         self.LOLBC = None
         self.LBC50 = None
         self.HOLBC = None
+        self.pLOLBC = None
+        self.pLBC50 = None
+        self.pHOLBC = None
         self.mol = None
         self.smiles = None
         self.lbc_preds = None
@@ -90,9 +90,9 @@ class amberNPS:
         LBCmol = 10 ** -pLBC
         LBC = LBCmol * mw
         return LBC
-    
+
     @staticmethod
-    def _load_pickle(file_path: str | Path) -> None:
+    def _load_pickle(filename: str) -> None:
         """
         Loads a pickle file safely, accepting string or Path-like objects.
         Raises:
@@ -100,20 +100,13 @@ class amberNPS:
             FileNotFoundError: if the file does not exist
             pickle.UnpicklingError: if pickle fails to load
         """
-
-        if not isinstance(file_path, (str, Path)):
-            raise TypeError(f"Expected str or Path, got {type(file_path).__name__}")
-
-        path = Path(file_path)
-
-        if not path.exists():
-            raise FileNotFoundError(f"File not found: {path}")
-
         try:
-            with path.open('rb') as f:
+            with resources.files('amberNPS').joinpath("models", filename).open('rb') as f:
                 return pickle.load(f)
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Could not find {filename} inside package models directory.")
         except pickle.UnpicklingError as e:
-            raise ValueError(f"Failed to load pickle from {path}: {e}")
+            raise ValueError(f"Failed to unpickle {filename}: {e}")
 
     @staticmethod
     def _register_descriptors(calculator) -> Calculator:
@@ -148,16 +141,16 @@ class amberNPS:
         c.register(TopologicalIndex.PetitjeanIndex())
 
         return c
-    
+
     @property
     def structure(self) -> Image:
         """Generates image of structure in the console"""
         img = Draw.MolToImage(self.mol)
         return img.show()
-    
+
     def predict(self, smiles: str) -> dict:
         """
-        Predicts the drug class and lethal blood concentrations (LBC, in 
+        Predicts the drug class and lethal blood concentrations (LBC, in
         ng/mL) for the provided smiles and sets them as instance properties.
 
         """
@@ -174,14 +167,14 @@ class amberNPS:
 
         # calculate exact molecular weight
         self.mw = rdMolDescriptors.CalcExactMolWt(self.mol)
-            
+
         # Predict drug class and LBCs
         try:
             self.drug_class = self._predict_drug_class()
             self.lbc_preds = self._predict_lbc()
         except Exception as e:
             raise RuntimeError(f"Prediction failed for {smiles}: {e}")
-        
+
         # Unpack predictions
         self.pLOLBC, self.pLBC50, self.pHOLBC = self.lbc_preds
 
@@ -189,9 +182,8 @@ class amberNPS:
         self.LOLBC = self.convert_pLBC_to_LBC(self.lbc_preds[0], self.mw)
         self.LBC50 = self.convert_pLBC_to_LBC(self.lbc_preds[1], self.mw)
         self.HOLBC = self.convert_pLBC_to_LBC(self.lbc_preds[2], self.mw)
-        
-        return self.to_dict()
 
+        return self.to_dict()
 
     def to_dict(self) -> dict[str, float | str]:
         """
@@ -206,9 +198,9 @@ class amberNPS:
         }
 
     # -------------------
-    # Private Members 
+    # Private Members
     # -------------------
-    
+
     def _compute_maccs(self) -> pd.DataFrame:
         """
         Generates the MACCS keys for the compound used for predicting
