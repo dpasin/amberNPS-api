@@ -19,7 +19,7 @@ It is recommended to create a fresh environment using conda for stability and to
 ```shell
 conda create -n ambernps python==3.10
 conda activate ambernps
-pip install ambernps
+pip install amberNPS
 ```
 
 ## Example usage
