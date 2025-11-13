@@ -4,6 +4,7 @@ from typing import Self
 
 import numpy as np
 import pandas as pd
+from IPython.display import display
 from PIL import Image
 from mordred import (Calculator, AdjacencyMatrix, Autocorrelation, EState, DistanceMatrix,
                      TopologicalIndex, BCUT, MoeType, RingCount, BaryszMatrix, ExtendedTopochemicalAtom,
@@ -13,7 +14,55 @@ from rdkit.Chem import Draw, MACCSkeys, rdMolDescriptors
 
 
 class amberNPS:
+    
+    """
+    Predicts drug class and lethal blood concentration (LBC) values from SMILES strings.
 
+    The AmberNPS API provides drug classification and prediction of LBC values
+    using pre-trained machine learning models stored as pickle files.
+
+    Parameters
+    ----------
+    mlp : str or Path
+        Path to the Multitask Regressor model file (`.pkl`).
+    scaler : str or Path
+        Path to the Scaler used to normalize Mordred descriptors.
+    rf : str or Path
+        Path to the Random Forest model used for drug class prediction.
+    le : str or Path
+        Path to the LabelEncoder used to map numeric labels to class names.
+
+    Attributes
+    ----------
+    smiles : str
+        The input SMILES string provided to `predict()`.
+    mol : rdkit.Chem.Mol
+        RDKit molecule object created from the SMILES.
+    mw : float
+        Exact molecular weight of the molecule.
+    drug_class : str
+        Predicted drug class label.
+    LBC50 : float
+        Median predicted lethal blood concentration (ng/mL or µg/mL).
+    LOLBC : float
+        Lower bound of lethal blood concentration range.
+    HOLBC : float
+        Upper bound of lethal blood concentration range.
+    structure : PIL.Image.Image
+        Rendered image of the molecule structure.
+
+    Methods
+    -------
+    predict(smiles)
+        Predicts drug class and concentration values for the given SMILES.
+    to_dict()
+        Returns the results as a dictionary for easy serialization.
+    structure
+        Property that returns an image of the molecule.
+    convert_pLBC_to_LBC(pLBC, mw)
+        Converts predicted -log(LBC) values to actual concentrations.
+    """
+    
     def __init__(self,
                  mlp: str = './amberNPS/models/multitask_regressor.pkl',
                  scaler: str = './amberNPS//models/scaler.pkl',
@@ -104,12 +153,12 @@ class amberNPS:
     def structure(self) -> Image:
         """Generates image of structure in the console"""
         img = Draw.MolToImage(self.mol)
-        return img
+        return img.show()
     
-    def predict(self, smiles: str) -> Self:
+    def predict(self, smiles: str) -> dict:
         """
-        Predicts the drug class and lethal blood concentrations (LBC)
-        for the smiles and sets them as instance properties.
+        Predicts the drug class and lethal blood concentrations (LBC, in 
+        ng/mL) for the provided smiles and sets them as instance properties.
 
         """
 
