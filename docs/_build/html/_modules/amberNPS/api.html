@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>amberNPS.api &mdash; amberNPS 0.1.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=fd825880"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            amberNPS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">amberNPS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">amberNPS.api</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for amberNPS.api</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Self</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mordred</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">Calculator</span><span class="p">,</span> <span class="n">AdjacencyMatrix</span><span class="p">,</span> <span class="n">Autocorrelation</span><span class="p">,</span> <span class="n">EState</span><span class="p">,</span> <span class="n">DistanceMatrix</span><span class="p">,</span>
+                     <span class="n">TopologicalIndex</span><span class="p">,</span> <span class="n">BCUT</span><span class="p">,</span> <span class="n">MoeType</span><span class="p">,</span> <span class="n">RingCount</span><span class="p">,</span> <span class="n">BaryszMatrix</span><span class="p">,</span> <span class="n">ExtendedTopochemicalAtom</span><span class="p">,</span>
+                     <span class="n">TopologicalCharge</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rdkit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Chem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rdkit.Chem</span><span class="w"> </span><span class="kn">import</span> <span class="n">Draw</span><span class="p">,</span> <span class="n">MACCSkeys</span><span class="p">,</span> <span class="n">rdMolDescriptors</span>
+
+
+<div class="viewcode-block" id="amberNPS">
+<a class="viewcode-back" href="../../amberNPS.html#amberNPS.api.amberNPS">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">amberNPS</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">mlp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./amberNPS/models/multitask_regressor.pkl&#39;</span><span class="p">,</span>
+                 <span class="n">scaler</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./amberNPS//models/scaler.pkl&#39;</span><span class="p">,</span>
+                 <span class="n">rf</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./amberNPS/models/random_forest_model.pkl&#39;</span><span class="p">,</span>
+                 <span class="n">le</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;./amberNPS//models/label_encoder.pkl&#39;</span>
+                 <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_pickle</span><span class="p">(</span><span class="n">mlp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_pickle</span><span class="p">(</span><span class="n">scaler</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_pickle</span><span class="p">(</span><span class="n">rf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">le</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_pickle</span><span class="p">(</span><span class="n">le</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register_descriptors</span><span class="p">(</span><span class="n">Calculator</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drug_class</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOLBC</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LBC50</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">HOLBC</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smiles</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbc_preds</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mw</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="amberNPS.convert_pLBC_to_LBC">
+<a class="viewcode-back" href="../../amberNPS.html#amberNPS.api.amberNPS.convert_pLBC_to_LBC">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_pLBC_to_LBC</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pLBC</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mw</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Performs antilog transformation of the predicted LBC values&quot;&quot;&quot;</span>
+        <span class="n">LBCmol</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="n">pLBC</span>
+        <span class="n">LBC</span> <span class="o">=</span> <span class="n">LBCmol</span> <span class="o">*</span> <span class="n">mw</span>
+        <span class="k">return</span> <span class="n">LBC</span></div>
+
+    
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_pickle</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loads a pickle file safely, accepting string or Path-like objects.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            TypeError: if file_path is not str or Path</span>
+<span class="sd">            FileNotFoundError: if the file does not exist</span>
+<span class="sd">            pickle.UnpicklingError: if pickle fails to load</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected str or Path, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">pickle</span><span class="o">.</span><span class="n">UnpicklingError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load pickle from </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_register_descriptors</span><span class="p">(</span><span class="n">calculator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Calculator</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register specific Mordred descriptors used for predictions.&quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">calculator</span><span class="p">()</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">AdjacencyMatrix</span><span class="o">.</span><span class="n">AdjacencyMatrix</span><span class="p">(</span><span class="s1">&#39;VR1&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Autocorrelation</span><span class="o">.</span><span class="n">ATSC</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Autocorrelation</span><span class="o">.</span><span class="n">ATSC</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">DistanceMatrix</span><span class="o">.</span><span class="n">DistanceMatrix</span><span class="p">(</span><span class="s1">&#39;SpMax&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">EState</span><span class="o">.</span><span class="n">AtomTypeEState</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">,</span> <span class="s1">&#39;dCH2&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">EState</span><span class="o">.</span><span class="n">AtomTypeEState</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;aaaC&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">MoeType</span><span class="o">.</span><span class="n">EState_VSA</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">RingCount</span><span class="o">.</span><span class="n">RingCount</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Autocorrelation</span><span class="o">.</span><span class="n">ATS</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Autocorrelation</span><span class="o">.</span><span class="n">ATSC</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">BCUT</span><span class="o">.</span><span class="n">BCUT</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">BaryszMatrix</span><span class="o">.</span><span class="n">BaryszMatrix</span><span class="p">(</span><span class="s1">&#39;are&#39;</span><span class="p">,</span> <span class="s1">&#39;SpDiam&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">EState</span><span class="o">.</span><span class="n">AtomTypeEState</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;dCH2&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">ExtendedTopochemicalAtom</span><span class="o">.</span><span class="n">EtaVEMCount</span><span class="p">(</span><span class="s1">&#39;ns_d&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">RingCount</span><span class="o">.</span><span class="n">RingCount</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">TopologicalCharge</span><span class="o">.</span><span class="n">TopologicalCharge</span><span class="p">(</span><span class="s1">&#39;raw&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">AdjacencyMatrix</span><span class="o">.</span><span class="n">AdjacencyMatrix</span><span class="p">(</span><span class="s1">&#39;VR2&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Autocorrelation</span><span class="o">.</span><span class="n">ATSC</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Autocorrelation</span><span class="o">.</span><span class="n">AATSC</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">Autocorrelation</span><span class="o">.</span><span class="n">GATS</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">BaryszMatrix</span><span class="o">.</span><span class="n">BaryszMatrix</span><span class="p">(</span><span class="s1">&#39;are&#39;</span><span class="p">,</span> <span class="s1">&#39;SpMAD&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">EState</span><span class="o">.</span><span class="n">AtomTypeEState</span><span class="p">(</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;dO&#39;</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">MoeType</span><span class="o">.</span><span class="n">PEOE_VSA</span><span class="p">(</span><span class="mi">13</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">MoeType</span><span class="o">.</span><span class="n">VSA_EState</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">RingCount</span><span class="o">.</span><span class="n">RingCount</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">TopologicalIndex</span><span class="o">.</span><span class="n">Diameter</span><span class="p">())</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">TopologicalIndex</span><span class="o">.</span><span class="n">PetitjeanIndex</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">c</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">structure</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Image</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates image of structure in the console&quot;&quot;&quot;</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">Draw</span><span class="o">.</span><span class="n">MolToImage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">img</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="amberNPS.predict">
+<a class="viewcode-back" href="../../amberNPS.html#amberNPS.api.amberNPS.predict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smiles</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predicts the drug class and lethal blood concentrations (LBC, in </span>
+<span class="sd">        ng/mL) for the provided smiles and sets them as instance properties.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">smiles</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected str, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">smiles</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Convert smiles to mol object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smiles</span> <span class="o">=</span> <span class="n">smiles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mol</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smiles</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not parse smiles to mol object: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">smiles</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># calculate exact molecular weight</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mw</span> <span class="o">=</span> <span class="n">rdMolDescriptors</span><span class="o">.</span><span class="n">CalcExactMolWt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="p">)</span>
+            
+        <span class="c1"># Predict drug class and LBCs</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">drug_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_drug_class</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lbc_preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_lbc</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Prediction failed for </span><span class="si">{</span><span class="n">smiles</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Unpack predictions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pLOLBC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pLBC50</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pHOLBC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lbc_preds</span>
+
+        <span class="c1"># Perform antilog transformation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOLBC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_pLBC_to_LBC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbc_preds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LBC50</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_pLBC_to_LBC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbc_preds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">HOLBC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_pLBC_to_LBC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbc_preds</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">mw</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="amberNPS.to_dict">
+<a class="viewcode-back" href="../../amberNPS.html#amberNPS.api.amberNPS.to_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a dictionary containing predicted drug class and LBC values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;Drug Class&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">drug_class</span><span class="p">,</span>
+            <span class="s1">&#39;LOLBC&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">LOLBC</span><span class="p">,</span>
+            <span class="s1">&#39;LBC50&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">LBC50</span><span class="p">,</span>
+            <span class="s1">&#39;HOLBC&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">HOLBC</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+    <span class="c1"># -------------------</span>
+    <span class="c1"># Private Members </span>
+    <span class="c1"># -------------------</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_maccs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the MACCS keys for the compound used for predicting</span>
+<span class="sd">        the compound&#39;s drug class.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">maccs</span> <span class="o">=</span> <span class="n">MACCSkeys</span><span class="o">.</span><span class="n">GenMACCSKeys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="p">)</span>
+        <span class="n">maccs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">list</span><span class="p">(</span><span class="n">maccs</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;MACCS_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">167</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">maccs_df</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_lbc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Predicts the low, median and high LBC and return a list.</span>
+<span class="sd">        i.e. [pLOLBC, pLBC50, pHOLBC]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_features</span><span class="p">()</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mlp</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">pred</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_predict_drug_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Predicts drug class using trained random forest classifier&quot;&quot;&quot;</span>
+
+        <span class="n">maccs_keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_maccs</span><span class="p">()</span>
+        <span class="n">drug_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">maccs_keys</span><span class="p">)</span>
+        <span class="n">drug_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">le</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">drug_class</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">drug_class</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute feature array for predictions using Mordred calculator&quot;&quot;&quot;</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">calc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mol</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">features</span></div>
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Daniel Pasin.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
