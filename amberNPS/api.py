@@ -64,10 +64,10 @@ class amberNPS:
     """
     
     def __init__(self,
-                 mlp: str = './amberNPS/models/multitask_regressor.pkl',
-                 scaler: str = './amberNPS//models/scaler.pkl',
-                 rf: str = './amberNPS/models/random_forest_model.pkl',
-                 le: str = './amberNPS//models/label_encoder.pkl'
+                 mlp: str = 'models/multitask_regressor.pkl',
+                 scaler: str = 'models/scaler.pkl',
+                 rf: str = 'models/random_forest_model.pkl',
+                 le: str = 'models/label_encoder.pkl'
                  ):
 
         self.mlp = self._load_pickle(mlp)
