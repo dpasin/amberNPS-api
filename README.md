@@ -20,10 +20,10 @@ pip install amberNPS
 
 Import the amberNPS class, instatiate it then call the predict method with the SMILES string:
 ```pycon
->>> from amberNPS import amberNPS
->>> a = amberNPS()
->>> preds = a.predict("Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4") # bromazolam
->>> preds
+from amberNPS import amberNPS
+a = amberNPS()
+preds = a.predict("Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4") # bromazolam
+preds
 # {'Drug Class': 'Benzodiazepines', 'LOLBC': 28.988149644904777,'LBC50': 151.32238377755087, 'HOLBC': 870.7153200659999}
 ```
 Results are also stored as properties:
@@ -50,7 +50,7 @@ As a list:
 Or using properties:
 ```pycon
 >>> a.pLOLBC
-# 1.0843620906924618
+1.0843620906924618
 >>> a.pLBC50
 # 0.36667941118940295
 >>> a.pHOLBC
