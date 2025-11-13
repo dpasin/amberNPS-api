@@ -68,11 +68,11 @@ The API reference is available at <https://ambernps-api.readthedocs.io/en/latest
 
 ## Contributing
 
-- Feature ideas and bug reports are welcome on the [Issue Tracker](https://github.com/dpasin/amberNPS/issues).
-- Fork the [source code](https://github.com/dpasin/amberNPS) on GitHub, make changes and file a pull request.
+- Feature ideas and bug reports are welcome on the [Issue Tracker](https://github.com/dpasin/amberNPS-api/issues).
+- Fork the [source code](https://github.com/dpasin/amberNPS-api) on GitHub, make changes and file a pull request.
 
 ## License
 
-PubChemPy is licensed under the [MIT license](https://github.com/dpasin/amberNPS/LICENSE).
+PubChemPy is licensed under the [MIT license](https://github.com/dpasin/amberNPS-api/LICENSE).
 
 
