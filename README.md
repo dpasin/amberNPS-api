@@ -25,36 +25,37 @@ Import the amberNPS class, instatiate it then call the predict method with the S
 >>> a = a.predict("Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4") # bromazolam
 >>> preds
 {'Drug Class': 'Benzodiazepines', 'LOLBC': 28.988149644904777,'LBC50': 151.32238377755087, 'HOLBC': 870.7153200659999}
+
 ```
 Results are also stored as properties:
 
 ```pycon
 >>> a.LOLBC
-# 28.988149644904777
+28.988149644904777
 >>> a.LBC50
-# 151.32238377755087
+151.32238377755087
 >>> a.HOLBC
-# 870.7153200659999
+870.7153200659999
 >>> a.drug_class
-# Benzodiazepines
+Benzodiazepines
 >>> a.smiles
-# "Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4"
+Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4
 ```
 The raw predictions (log10 of concentrations above) can also be accessed.
 
 As a list:
 ```pycon
 >>> a.lbc_preds
-# [1.0843620906924618, 0.36667941118940295, -0.3932936005597203]
+[1.0843620906924618, 0.36667941118940295, -0.3932936005597203]
 ```
 Or using properties:
 ```pycon
 >>> a.pLOLBC
 1.0843620906924618
 >>> a.pLBC50
-# 0.36667941118940295
+0.36667941118940295
 >>> a.pHOLBC
-# -0.3932936005597203
+0.3932936005597203
 ```
 
 You can also render the image of the structure (this may or may not work depending on IDE):
