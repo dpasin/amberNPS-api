@@ -16,7 +16,7 @@ pip install amberNPS
 
 ## Example usage
 
-Import the amberNPS class, instatiate it then call the predict method with the SMILES string:
+Import the amberNPS class, instantiate it then call the predict method with the SMILES string:
 ```pycon
 >>> from amberNPS import amberNPS
 >>> a = amberNPS()
