@@ -20,11 +20,11 @@ pip install amberNPS
 
 Import the amberNPS class, instatiate it then call the predict method with the SMILES string:
 ```pycon
-from amberNPS import amberNPS
-a = amberNPS()
-preds = a.predict("Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4") # bromazolam
-preds
-# {'Drug Class': 'Benzodiazepines', 'LOLBC': 28.988149644904777,'LBC50': 151.32238377755087, 'HOLBC': 870.7153200659999}
+>>> from amberNPS import amberNPS
+>>> a = amberNPS()
+>>> a = a.predict("Brc1cc2C(=NCc3nnc(C)n3c2cc1)c4ccccc4") # bromazolam
+>>> preds
+{'Drug Class': 'Benzodiazepines', 'LOLBC': 28.988149644904777,'LBC50': 151.32238377755087, 'HOLBC': 870.7153200659999}
 ```
 Results are also stored as properties:
 
