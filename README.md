@@ -14,6 +14,14 @@ Install the latest version of amberNPS with pip:
 pip install amberNPS
 ```
 
+It is recommended to create a fresh environment using conda for stability
+
+```shell
+conda create -n ambernps python==3.10
+conda activate ambernps
+pip install ambernps
+```
+
 ## Example usage
 
 Import the amberNPS class, instantiate it then call the predict method with the SMILES string:
