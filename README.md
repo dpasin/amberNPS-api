@@ -14,7 +14,7 @@ Install the latest version of amberNPS with pip:
 pip install amberNPS
 ```
 
-It is recommended to create a fresh environment using conda for stability:
+It is recommended to create a fresh environment using conda for stability and to avoid dependency issues (python 3.10+ currently supported):
 
 ```shell
 conda create -n ambernps python==3.10
