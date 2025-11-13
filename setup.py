@@ -1,17 +1,21 @@
 from setuptools import setup, find_packages
+from pathlib import Path
+
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text()
 
 setup(
     name = 'amberNPS',
-    packages = find_packages(where="amberNPS"),
-    version = '0.1.0',
+    packages = ['amberNPS'],
+    include_package_data=True,
+    package_data= {'amberNPS': ['*.pkl', '*.png']},
+    version = '0.1.4',
     license='MIT',
     description = 'A python api to make lethal blood concentrations using amberNPS',
-    long_description="""amberNPS is a streamlit web application developed by Tascisio Nascimento Correa 
-    https://github.com/nutof-pefoce/ambernps/blob/main/amberNPS.py. See publication at 
-    https://www.sciencedirect.com/science/article/pii/S2667118224000151.
-    """,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author = 'Daniel Pasin',
-    author_email = 'daniel.j.pasin@outlook.com',
+    author_email = 'daniel.pasin@hyperiondata.org',
     url = 'https://github.com/dpasin/amberNPS-api',
     keywords = ['amberNPS', 'chemistry', 'toxicology'],
     install_requires=['numpy', 'pandas', 'rdkit', 'mordredcommunity', 'scikit-learn==1.6.1'],
@@ -20,7 +24,6 @@ setup(
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Chemistry',
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
-        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
     ],
 )
